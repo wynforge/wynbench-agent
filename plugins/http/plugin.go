@@ -76,7 +76,7 @@ func (p *Plugin) Execute(action core.Action) (core.Result, error) {
 		bodyReader = strings.NewReader(b)
 	}
 
-	req, err := http.NewRequest(method, rawURL, bodyReader)
+	req, err := http.NewRequest(method, parsed.String(), bodyReader)
 	if err != nil {
 		return core.Result{Success: false, Error: fmt.Sprintf("failed to build request: %v", err)}, nil
 	}
