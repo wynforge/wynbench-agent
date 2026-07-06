@@ -70,6 +70,17 @@ func TestHTTPPlugin_MissingURL(t *testing.T) {
 	}
 }
 
+func TestHTTPPlugin_InvalidScheme(t *testing.T) {
+	p := httpplugin.New()
+	result, _ := p.Execute(core.Action{
+		Plugin: "http",
+		Params: map[string]any{"url": "file:///etc/passwd"},
+	})
+	if result.Success {
+		t.Fatal("expected failure for non-http scheme")
+	}
+}
+
 func TestHTTPPlugin_POST(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

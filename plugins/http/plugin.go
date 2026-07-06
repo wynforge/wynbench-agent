@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/oswryn/wynbench-agent/core"
@@ -36,7 +37,7 @@ func (p *Plugin) Configure(_ map[string]any) error { return nil }
 //
 // Required params:
 //
-//	"url"    (string) – the target URL
+//	"url"    (string) – the target URL (must use http or https scheme)
 //
 // Optional params:
 //
@@ -47,9 +48,22 @@ func (p *Plugin) Execute(action core.Action) (core.Result, error) {
 	if !ok {
 		return core.Result{Success: false, Error: "missing param: url"}, nil
 	}
-	url, ok := urlVal.(string)
-	if !ok || url == "" {
+	rawURL, ok := urlVal.(string)
+	if !ok || rawURL == "" {
 		return core.Result{Success: false, Error: "param url must be a non-empty string"}, nil
+	}
+
+	// Validate scheme to prevent SSRF via non-HTTP protocols (file://, ftp://, etc.).
+	parsed, parseErr := url.Parse(rawURL)
+	if parseErr != nil {
+		return core.Result{Success: false, Error: fmt.Sprintf("invalid url: %v", parseErr)}, nil
+	}
+	scheme := strings.ToLower(parsed.Scheme)
+	if scheme != "http" && scheme != "https" {
+		return core.Result{
+			Success: false,
+			Error:   fmt.Sprintf("unsupported scheme %q: only http and https are allowed", parsed.Scheme),
+		}, nil
 	}
 
 	method := "GET"
@@ -62,7 +76,7 @@ func (p *Plugin) Execute(action core.Action) (core.Result, error) {
 		bodyReader = strings.NewReader(b)
 	}
 
-	req, err := http.NewRequest(method, url, bodyReader)
+	req, err := http.NewRequest(method, rawURL, bodyReader)
 	if err != nil {
 		return core.Result{Success: false, Error: fmt.Sprintf("failed to build request: %v", err)}, nil
 	}
@@ -81,9 +95,9 @@ func (p *Plugin) Execute(action core.Action) (core.Result, error) {
 	}
 
 	// Attempt to parse JSON body for richer downstream use.
-	var parsed any
-	if err := json.Unmarshal(rawBody, &parsed); err == nil {
-		data["json"] = parsed
+	var parsedJSON any
+	if err := json.Unmarshal(rawBody, &parsedJSON); err == nil {
+		data["json"] = parsedJSON
 	}
 
 	success := resp.StatusCode >= 200 && resp.StatusCode < 300
