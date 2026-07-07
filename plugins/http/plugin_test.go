@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/oswryn/wynbench-agent/core"
-	httpplugin "github.com/oswryn/wynbench-agent/plugins/http"
+	"github.com/wynforge/wynbench-agent/core"
+	httpplugin "github.com/wynforge/wynbench-agent/plugins/http"
 )
 
 func TestHTTPPlugin_Name(t *testing.T) {

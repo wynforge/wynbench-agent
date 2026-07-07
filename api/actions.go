@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // executeAction handles POST /actions/execute.

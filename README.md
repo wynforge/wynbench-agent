@@ -90,6 +90,12 @@ No core files need to change.
 |--------|------------------|----------------------------------------|
 | POST   | `/workflows/run` | Run an inline or stored workflow       |
 
+### Health
+
+| Method | Path      | Description                           |
+|--------|-----------|---------------------------------------|
+| GET    | `/health` | Basic service readiness and plugins   |
+
 **Inline body**
 ```json
 {
@@ -114,6 +120,8 @@ No core files need to change.
 go run ./cmd/server            # default :8080
 go run ./cmd/server -addr :9090
 ```
+
+The server sends permissive CORS headers for local browser-based clients.
 
 ## Testing
 

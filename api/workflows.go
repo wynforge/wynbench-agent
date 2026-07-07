@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // runWorkflow handles POST /workflows/run.

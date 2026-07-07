@@ -1,3 +1,3 @@
-module github.com/oswryn/wynbench-agent
+module github.com/wynforge/wynbench-agent
 
 go 1.24.13

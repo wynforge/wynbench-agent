@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/oswryn/wynbench-agent/api"
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/api"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // stubPlugin is a no-op plugin used across API handler tests.

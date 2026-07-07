@@ -3,8 +3,8 @@ package sqlplugin_test
 import (
 	"testing"
 
-	"github.com/oswryn/wynbench-agent/core"
-	sqlplugin "github.com/oswryn/wynbench-agent/plugins/sql"
+	"github.com/wynforge/wynbench-agent/core"
+	sqlplugin "github.com/wynforge/wynbench-agent/plugins/sql"
 )
 
 func TestSQLPlugin_Name(t *testing.T) {

@@ -13,7 +13,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // Plugin is the HTTP protocol plugin.

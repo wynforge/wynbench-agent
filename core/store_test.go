@@ -3,7 +3,7 @@ package core_test
 import (
 	"testing"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 func TestConnectionStore(t *testing.T) {

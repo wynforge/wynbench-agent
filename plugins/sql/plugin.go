@@ -9,7 +9,7 @@ package sqlplugin
 import (
 	"fmt"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // Plugin is the SQL protocol plugin.

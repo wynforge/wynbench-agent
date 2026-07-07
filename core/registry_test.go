@@ -3,7 +3,7 @@ package core_test
 import (
 	"testing"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // fakePlugin is a minimal Plugin used in registry tests.

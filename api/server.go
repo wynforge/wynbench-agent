@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/oswryn/wynbench-agent/core"
+	"github.com/wynforge/wynbench-agent/core"
 )
 
 // Server holds the shared dependencies for all HTTP handlers.
@@ -23,6 +23,8 @@ func NewServer(cs *core.ConnectionStore, ws *core.WorkflowStore, e *core.Engine)
 // RegisterRoutes attaches all API routes to mux. Using a plain http.ServeMux
 // keeps the dependency footprint minimal.
 func (s *Server) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /health", s.health)
+
 	mux.HandleFunc("POST /connections", s.createConnection)
 	mux.HandleFunc("GET /connections", s.listConnections)
 	mux.HandleFunc("DELETE /connections/{id}", s.deleteConnection)
