@@ -9,8 +9,8 @@ import (
 // enginePlugin is a deterministic Plugin used in engine tests.
 type enginePlugin struct{}
 
-func (e *enginePlugin) Name() string                           { return "engine-test" }
-func (e *enginePlugin) Configure(_ map[string]any) error       { return nil }
+func (e *enginePlugin) Name() string                     { return "engine-test" }
+func (e *enginePlugin) Configure(_ map[string]any) error { return nil }
 func (e *enginePlugin) Execute(a core.Action) (core.Result, error) {
 	return core.Result{Success: true, Data: map[string]any{"params": a.Params}}, nil
 }

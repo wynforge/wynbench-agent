@@ -9,8 +9,8 @@ import (
 // fakePlugin is a minimal Plugin used in registry tests.
 type fakePlugin struct{ name string }
 
-func (f *fakePlugin) Name() string                           { return f.name }
-func (f *fakePlugin) Configure(_ map[string]any) error       { return nil }
+func (f *fakePlugin) Name() string                     { return f.name }
+func (f *fakePlugin) Configure(_ map[string]any) error { return nil }
 func (f *fakePlugin) Execute(a core.Action) (core.Result, error) {
 	return core.Result{Success: true, Data: map[string]any{"echo": a.Params}}, nil
 }

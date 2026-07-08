@@ -58,6 +58,17 @@ func (s *ConnectionStore) Delete(id string) error {
 	return nil
 }
 
+// ReplaceAll clears the store and repopulates it with conns. Used when
+// importing a configuration bundle.
+func (s *ConnectionStore) ReplaceAll(conns []Connection) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.data = make(map[string]Connection, len(conns))
+	for _, c := range conns {
+		s.data[c.ID] = c
+	}
+}
+
 // WorkflowStore is a thread-safe in-memory store for Workflow objects.
 type WorkflowStore struct {
 	mu   sync.RWMutex
@@ -108,4 +119,26 @@ func (s *WorkflowStore) Delete(id string) error {
 	}
 	delete(s.data, id)
 	return nil
+}
+
+// Update replaces an existing Workflow. Returns an error if the workflow does not exist.
+func (s *WorkflowStore) Update(w Workflow) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if _, exists := s.data[w.ID]; !exists {
+		return fmt.Errorf("workflow %q not found", w.ID)
+	}
+	s.data[w.ID] = w
+	return nil
+}
+
+// ReplaceAll clears the store and repopulates it with flows. Used when
+// importing a configuration bundle.
+func (s *WorkflowStore) ReplaceAll(flows []Workflow) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.data = make(map[string]Workflow, len(flows))
+	for _, w := range flows {
+		s.data[w.ID] = w
+	}
 }

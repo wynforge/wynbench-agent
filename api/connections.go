@@ -23,6 +23,7 @@ func (s *Server) createConnection(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusConflict, err.Error())
 		return
 	}
+	s.persist()
 	writeJSON(w, http.StatusCreated, c)
 }
 
@@ -42,5 +43,6 @@ func (s *Server) deleteConnection(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, err.Error())
 		return
 	}
+	s.persist()
 	w.WriteHeader(http.StatusNoContent)
 }

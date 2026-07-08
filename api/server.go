@@ -3,8 +3,10 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
+	"github.com/wynforge/wynbench-agent/config"
 	"github.com/wynforge/wynbench-agent/core"
 )
 
@@ -30,8 +32,31 @@ func (s *Server) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("DELETE /connections/{id}", s.deleteConnection)
 
 	mux.HandleFunc("POST /actions/execute", s.executeAction)
+	mux.HandleFunc("GET /kafka/topics", s.listKafkaTopics)
+	mux.HandleFunc("GET /kafka/messages", s.listKafkaTopicMessages)
 
+	mux.HandleFunc("POST /workflows", s.createWorkflow)
+	mux.HandleFunc("GET /workflows", s.listWorkflows)
+	mux.HandleFunc("PUT /workflows/{id}", s.updateWorkflow)
+	mux.HandleFunc("DELETE /workflows/{id}", s.deleteWorkflow)
 	mux.HandleFunc("POST /workflows/run", s.runWorkflow)
+
+	mux.HandleFunc("GET /config/export", s.exportConfig)
+	mux.HandleFunc("POST /config/import", s.importConfig)
+	mux.HandleFunc("GET /config/path", s.configPath)
+}
+
+// persist saves the current connections and workflows to the on-disk config
+// file. Save failures are logged but do not fail the triggering request,
+// since the in-memory stores remain authoritative for the running process.
+func (s *Server) persist() {
+	snap := config.Snapshot{
+		Connections: s.connections.List(),
+		Workflows:   s.workflows.List(),
+	}
+	if err := config.Save(snap); err != nil {
+		log.Printf("warning: failed to persist config: %v", err)
+	}
 }
 
 // writeJSON serialises v as JSON and writes it with the given status code.

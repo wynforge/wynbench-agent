@@ -21,14 +21,27 @@ func New() *Plugin { return &Plugin{} }
 // Name returns the protocol identifier used to look up this plugin.
 func (p *Plugin) Name() string { return "sql" }
 
-// Configure accepts optional connection-level settings such as a DSN. The
-// placeholder implementation performs basic validation only.
+// Configure accepts optional connection-level settings such as a connection
+// string. The placeholder implementation performs basic validation only.
 func (p *Plugin) Configure(cfg map[string]any) error {
-	if dsn, ok := cfg["dsn"].(string); ok && dsn != "" {
+	if dsn, ok := connectionString(cfg); ok && dsn != "" {
 		return nil
 	}
-	// A missing DSN is not fatal at configure time; it will surface at Execute.
+	// A missing connection string is not fatal at configure time; it will
+	// surface at Execute.
 	return nil
+}
+
+// connectionString reads the SQL connection string from cfg, accepting
+// either the current "connectionString" key or the legacy "dsn" key.
+func connectionString(cfg map[string]any) (string, bool) {
+	if v, ok := cfg["connectionString"].(string); ok && v != "" {
+		return v, true
+	}
+	if v, ok := cfg["dsn"].(string); ok && v != "" {
+		return v, true
+	}
+	return "", false
 }
 
 // Execute validates SQL action parameters and returns a stub result.
@@ -39,7 +52,8 @@ func (p *Plugin) Configure(cfg map[string]any) error {
 //
 // Optional params:
 //
-//	"dsn"   (string) – data source name (overrides connection config)
+//	"connectionString" (string) – connection string (overrides connection config)
+//	"dsn"               (string) – legacy alias for "connectionString"
 func (p *Plugin) Execute(action core.Action) (core.Result, error) {
 	query, ok := action.Params["query"].(string)
 	if !ok || query == "" {
