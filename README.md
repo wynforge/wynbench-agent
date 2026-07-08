@@ -131,7 +131,8 @@ go test ./...
 
 ## Built-in Plugins
 
-| Name   | Status      | Notes                                              |
-|--------|-------------|----------------------------------------------------|
-| `http` | Functional  | Basic HTTP GET/POST; params: `url`, `method`, `body` |
-| `sql`  | Stub        | Validates params, returns stub rows; no real DB   |
+| Name    | Status      | Notes                                                                  |
+|---------|-------------|------------------------------------------------------------------------|
+| `http`  | Functional  | Basic HTTP GET/POST; params: `url`, `method`, `body`                   |
+| `kafka` | Functional  | Produce/list/read helpers; params include `brokers`, `topic`, `value`  |
+| `sql`   | Stub        | Validates params, returns stub rows; no real DB                        |
